@@ -1,0 +1,23 @@
+﻿@page "/todo"
+
+       
+<input placeholder="Something todo" bind="@newTodo"/>
+<button onclick="@AddTodo">Add todo</button>
+
+<ul>
+    @foreach (var item in todos)
+    {
+        <li>@item.Title</li>
+    }
+</ul>
+
+@functions{
+    IList<TodoItem> todos = new List<TodoItem>();
+    string newTodo;
+
+    void AddTodo()
+    {
+        todos.Add(new TodoItem {Title = newTodo });
+    }
+
+}
