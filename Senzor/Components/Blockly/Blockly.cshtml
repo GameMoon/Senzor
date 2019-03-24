@@ -9,7 +9,7 @@
 
 
 <xml id="toolbox" style="display: none">
-    @foreach (var block in blocks)
+    @foreach (var block in workspace)
     {
         <block type="@block.Type"></block>
     }
@@ -18,47 +18,48 @@
 
 @functions{
     private List<Block> blocks = new List<Block>();
+    private List<Block> workspace = new List<Block>();
     private bool blocklyLoaded = false;
+    private CommandCreator commandCreator = new CommandCreator();
 
     private int calculateFullHeight()
     {
-        return blocks.Count * 64;
+        return workspace.Count * 64;
     }
 
     protected override void OnInit()
     {
-        this.addBlocks();
-
+        this.addWorkspaceBlocks();
     }
 
     protected async override Task OnAfterRenderAsync()
     {
         if (!blocklyLoaded)
         {
-            await this.initBlocks();
+            await this.initWorkspace();
             //init Blockly
             blocklyLoaded = await jsRunTime.InvokeAsync<bool>("initBlockly");
         }
     }
 
-    private void addBlocks()
+    private void addWorkspaceBlocks()
     {
-        blocks.Add(new Block("logic_compare"));
-        blocks.Add(new Block("logic_boolean"));
-        blocks.Add(new Block("logic_operation"));
-        blocks.Add(new Block("controls_if"));
-        blocks.Add(new Block("math_number"));
-        blocks.Add(new CustomBlock("node"));
-        blocks.Add(new CustomBlock("output"));
-        blocks.Add(new CustomBlock("read"));
-        blocks.Add(new CustomBlock("sensor"));
-        blocks.Add(new CustomBlock("switch"));
-        blocks.Add(new CustomBlock("always"));
+        workspace.Add(new Block("logic_compare"));
+        workspace.Add(new Block("logic_boolean"));
+        workspace.Add(new Block("logic_operation"));
+        workspace.Add(new Block("controls_if"));
+        workspace.Add(new Block("math_number"));
+        workspace.Add(new CustomBlock("node"));
+        workspace.Add(new CustomBlock("output"));
+        workspace.Add(new CustomBlock("read"));
+        workspace.Add(new CustomBlock("sensor"));
+        workspace.Add(new CustomBlock("switch"));
+        workspace.Add(new CustomBlock("always"));
     }
 
-    private async Task initBlocks()
+    private async Task initWorkspace()
     {
-        foreach(var block in blocks)
+        foreach(var block in workspace)
         {
             if(block is CustomBlock)
             {
@@ -68,21 +69,18 @@
         }
     }
 
-    public async Task Generate()
+    private async Task updateBlocks()
     {
         string blockString = await jsRunTime.InvokeAsync<String>("getState");
-        var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Block>>(blockString);
+        blocks = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Block>>(blockString);
+    }
 
-        foreach(Block b in list)
-        {
-            Console.WriteLine(b.Id);
-            Console.WriteLine(b.Type);
-            Console.WriteLine(b.ParentId);
-            foreach(var child in b.Children)
-            {
-                Console.WriteLine(child);
-            }
-            Console.WriteLine("------------");
-        }
+    public async Task Generate()
+    {
+
+        await updateBlocks();
+        commandCreator.setBlocks(blocks);
+        commandCreator.generateCommands();
+
     }
 }
