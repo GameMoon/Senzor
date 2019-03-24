@@ -1,0 +1,14 @@
+{
+  "type": "always",
+  "message0": "always %1",
+  "args0": [
+    {
+      "type": "input_statement",
+      "name": "NAME",
+      "align": "CENTRE"
+    }
+  ],
+  "colour": 15,
+  "tooltip": "",
+  "helpUrl": ""
+}

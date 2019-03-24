@@ -1,32 +1,44 @@
 ﻿@inject IJSRuntime jsRunTime
 @inject HttpClient httpClient
 
-<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+<button class="btn btn-primary" onclick="@Generate">Generate</button>
+
+<div class="container" id="blocklyArea" style="height: @calculateFullHeight()px">
+    <div id="blocklyDiv" style="position: absolute"></div>
+</div>
+
 
 <xml id="toolbox" style="display: none">
     @foreach (var block in blocks)
     {
-        <block type="@block.Name"></block>
+        <block type="@block.Type"></block>
     }
 </xml>
 
 
-<button class="btn btn-primary" onclick="@Save">Save</button>
-
-
-@functions{     
+@functions{
     private List<Block> blocks = new List<Block>();
+    private bool blocklyLoaded = false;
+
+    private int calculateFullHeight()
+    {
+        return blocks.Count * 64;
+    }
 
     protected override void OnInit()
     {
         this.addBlocks();
+
     }
 
     protected async override Task OnAfterRenderAsync()
     {
-        await this.initBlocks();
-        //init Blockly
-        await jsRunTime.InvokeAsync<bool>("initBlockly");
+        if (!blocklyLoaded)
+        {
+            await this.initBlocks();
+            //init Blockly
+            blocklyLoaded = await jsRunTime.InvokeAsync<bool>("initBlockly");
+        }
     }
 
     private void addBlocks()
@@ -34,11 +46,14 @@
         blocks.Add(new Block("logic_compare"));
         blocks.Add(new Block("logic_boolean"));
         blocks.Add(new Block("logic_operation"));
+        blocks.Add(new Block("controls_if"));
+        blocks.Add(new Block("math_number"));
         blocks.Add(new CustomBlock("node"));
         blocks.Add(new CustomBlock("output"));
         blocks.Add(new CustomBlock("read"));
         blocks.Add(new CustomBlock("sensor"));
         blocks.Add(new CustomBlock("switch"));
+        blocks.Add(new CustomBlock("always"));
     }
 
     private async Task initBlocks()
@@ -53,8 +68,21 @@
         }
     }
 
-    public void Save()
+    public async Task Generate()
     {
+        string blockString = await jsRunTime.InvokeAsync<String>("getState");
+        var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Block>>(blockString);
 
+        foreach(Block b in list)
+        {
+            Console.WriteLine(b.Id);
+            Console.WriteLine(b.Type);
+            Console.WriteLine(b.ParentId);
+            foreach(var child in b.Children)
+            {
+                Console.WriteLine(child);
+            }
+            Console.WriteLine("------------");
+        }
     }
 }

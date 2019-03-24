@@ -9,15 +9,14 @@ namespace Senzor.Components.Blockly
 {
     public class CustomBlock : Block
     {
-        public CustomBlock(string name) : base(name) { }
+        public CustomBlock(string type) : base(type) { }
 
         public async Task Init(IJSRuntime jsRunTime, HttpClient httpClient)
         {
-            String jsonString = await httpClient.GetStringAsync("/js/blockly_custom_blocks/" + Name + ".json");
-            Console.WriteLine("customblock http end");
+            String jsonString = await httpClient.GetStringAsync("/js/blockly_custom_blocks/" + Type + ".json");
             await jsRunTime.InvokeAsync<bool>(
                 "loadBlock",
-                Name,
+                Type,
                 jsonString
             );
         }
