@@ -19,10 +19,18 @@
 
     <script>
         window.initBlockly = function(){
-            var workspace = Blockly.inject('blocklyDiv',
+           
+             var workspace = Blockly.inject('blocklyDiv',
                 { toolbox: document.getElementById('toolbox') });
             return workspace;
         };
+        window.loadBlock = function (name, jsonString) {
+            return Blockly.Blocks[name] = {
+                init: function () {
+                    this.jsonInit(JSON.parse(jsonString))
+                }
+            };
+        }
     </script>
 </body>
 </html>

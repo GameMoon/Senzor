@@ -1,0 +1,32 @@
+{
+  "type": "output",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "NAME",
+      "options": [
+        [
+          "output1",
+          "output1"
+        ],
+        [
+          "output2",
+          "output2"
+        ],
+        [
+          "output3",
+          "output3"
+        ],
+        [
+          "output4",
+          "output4"
+        ]
+      ]
+    }
+  ],
+  "output": "output",
+  "colour": 30,
+  "tooltip": "",
+  "helpUrl": ""
+}

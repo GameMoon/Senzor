@@ -1,0 +1,28 @@
+{
+  "type": "node",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "NAME",
+      "options": [
+        [
+          "Node_1",
+          "node1"
+        ],
+        [
+          "Node_2",
+          "node2"
+        ],
+        [
+          "Node_3",
+          "node3"
+        ]
+      ]
+    }
+  ],
+  "output": "node",
+  "colour": 120,
+  "tooltip": "",
+  "helpUrl": ""
+}

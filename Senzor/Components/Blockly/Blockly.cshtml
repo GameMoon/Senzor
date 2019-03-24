@@ -1,0 +1,60 @@
+﻿@inject IJSRuntime jsRunTime
+@inject HttpClient httpClient
+
+<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+
+<xml id="toolbox" style="display: none">
+    @foreach (var block in blocks)
+    {
+        <block type="@block.Name"></block>
+    }
+</xml>
+
+
+<button class="btn btn-primary" onclick="@Save">Save</button>
+
+
+@functions{     
+    private List<Block> blocks = new List<Block>();
+
+    protected override void OnInit()
+    {
+        this.addBlocks();
+    }
+
+    protected async override Task OnAfterRenderAsync()
+    {
+        await this.initBlocks();
+        //init Blockly
+        await jsRunTime.InvokeAsync<bool>("initBlockly");
+    }
+
+    private void addBlocks()
+    {
+        blocks.Add(new Block("logic_compare"));
+        blocks.Add(new Block("logic_boolean"));
+        blocks.Add(new Block("logic_operation"));
+        blocks.Add(new CustomBlock("node"));
+        blocks.Add(new CustomBlock("output"));
+        blocks.Add(new CustomBlock("read"));
+        blocks.Add(new CustomBlock("sensor"));
+        blocks.Add(new CustomBlock("switch"));
+    }
+
+    private async Task initBlocks()
+    {
+        foreach(var block in blocks)
+        {
+            if(block is CustomBlock)
+            {
+                CustomBlock customBlock = (CustomBlock)block;
+                await customBlock.Init(jsRunTime,httpClient);
+            }
+        }
+    }
+
+    public void Save()
+    {
+
+    }
+}

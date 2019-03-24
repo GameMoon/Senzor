@@ -1,0 +1,26 @@
+{
+  "type": "write",
+  "message0": "Node: %1 Output %2 State: %3",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "NAME",
+      "check": "node"
+    },
+    {
+      "type": "input_value",
+      "name": "NAME",
+      "check": "output"
+    },
+    {
+      "type": "input_value",
+      "name": "NAME",
+      "check": "Boolean"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 290,
+  "tooltip": "",
+  "helpUrl": ""
+}

@@ -1,0 +1,32 @@
+{
+  "type": "output",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "NAME",
+      "options": [
+        [
+          "Temperature",
+          "sensor1"
+        ],
+        [
+          "Motion",
+          "sensor2"
+        ],
+        [
+          "Light",
+          "sensor3"
+        ],
+        [
+          "Sound",
+          "sensor4"
+        ]
+      ]
+    }
+  ],
+  "output": "sensor",
+  "colour": 200,
+  "tooltip": "",
+  "helpUrl": ""
+}
