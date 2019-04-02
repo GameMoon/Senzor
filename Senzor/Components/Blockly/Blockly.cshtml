@@ -50,8 +50,8 @@
         workspace.Add(new Block("controls_if"));
         workspace.Add(new Block("math_number"));
         workspace.Add(new CustomBlock("node"));
-        workspace.Add(new CustomBlock("output"));
-        workspace.Add(new CustomBlock("read"));
+        workspace.Add(new CustomBlock("node_output"));
+        workspace.Add(new CustomBlock("node_input"));
         workspace.Add(new CustomBlock("sensor"));
         workspace.Add(new CustomBlock("switch"));
         workspace.Add(new CustomBlock("always"));
@@ -73,6 +73,30 @@
     {
         string blockString = await jsRunTime.InvokeAsync<String>("getState");
         blocks = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Block>>(blockString);
+        foreach(var block in blocks)
+        {
+            setChildrenBlocks(block);
+        }
+    }
+
+    private void setChildrenBlocks(Block block)
+    {
+        List<Block> childrenBlocks = new List<Block>();
+        foreach(String childID in block.ChildrenIds)
+        {
+            Block childBlock = getBlockById(childID);
+            if (childBlock != null) childrenBlocks.Add(childBlock);
+        }
+        block.Children = childrenBlocks;
+    }
+
+    private Block getBlockById(String Id)
+    {
+        foreach (var block in blocks)
+        {
+            if (block.Id == Id) return block;
+        }
+        return null;
     }
 
     public async Task Generate()
@@ -81,6 +105,7 @@
         await updateBlocks();
         commandCreator.setBlocks(blocks);
         commandCreator.generateCommands();
+        commandCreator.showCommands();
 
     }
 }

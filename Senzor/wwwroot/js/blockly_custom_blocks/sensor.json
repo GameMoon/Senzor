@@ -8,19 +8,19 @@
       "options": [
         [
           "Temperature",
-          "sensor1"
+          "1"
         ],
         [
           "Motion",
-          "sensor2"
+          "2"
         ],
         [
           "Light",
-          "sensor3"
+          "3"
         ],
         [
           "Sound",
-          "sensor4"
+          "4"
         ]
       ]
     }

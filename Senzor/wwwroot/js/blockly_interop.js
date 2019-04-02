@@ -48,8 +48,15 @@ window.getState = function () {
 	allBlock.forEach(function (block) {
 		var newBlock = {
 			"id": block.id,
-			"type": block.type
+			"type": block.type,
+			'value': block.toString()
 		};
+
+		if (block.getInput(0)) {
+			var blockInput = block.getInput(0).fieldRow[0];
+			if (typeof blockInput.value_ != "undefined") newBlock['value'] = blockInput.value_;
+			else if (typeof blockInput.text_ != "undefined") newBlock['value'] = blockInput.text_;
+		}
 
 		//Parent
 		if (block.getParent() != null) newBlock['parentid'] = block.getParent().id;
@@ -63,9 +70,9 @@ window.getState = function () {
 				children.push(childBlock.id);
 			});
 
-			newBlock["children"] = children;
+			newBlock["childrenids"] = children;
 		}
-		else newBlock['children'] = []
+		else newBlock['childrenids'] = []
 
 		blocks.push(newBlock);
 	});

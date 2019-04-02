@@ -1,5 +1,5 @@
 {
-  "type": "read",
+  "type": "node_input",
   "message0": "Node: %1 Sensor %2",
   "args0": [
     {
