@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Senzor.Components.Blockly
+namespace Blockly
 {
     public class LogicCompareBlock : Block
     {
@@ -30,15 +31,26 @@ namespace Senzor.Components.Blockly
 
         public String getOperator()
         {
+            UnicodeEncoding unicode = new UnicodeEncoding();
+            
             if (Value.Contains("=")) return "eq";
-            else if (Value.Contains("≠")) return "nequs";
-            else if (Value.Contains("<")) return "lt";
-            else if (Value.Contains("≤‏")) return "lt";
-            else if (Value.Contains(">")) return "lt";
-            else if (Value.Contains("≥")) return "lt";
-            else return "";
+            else if (Value.Contains("≠")) return "ne";
 
+            if(children[0].Type == "node_input") { 
+                if (Value.Contains("<")) return "lt";
+                else if (Value.Contains("≤")) return "le";
+                else if (Value.Contains(">")) return "gt";
+                else if (Value.Contains("≥")) return "ge";
+            }
+            else
+            {
+                if (Value.Contains("<")) return "gt";
+                else if (Value.Contains("≤")) return "ge";
+                else if (Value.Contains(">")) return "lt";
+                else if (Value.Contains("≥")) return "le";
+            }
 
+            return "";
         }
        
     }

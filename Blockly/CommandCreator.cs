@@ -1,24 +1,23 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Senzor.Components.Blockly
+namespace Blockly
 {
     public class CommandCreator
     {
         private List<Block> blocks;
-        private List<NodeTask> tasks = new List<NodeTask>();
+        //private List<NodeTask> tasks = new List<NodeTask>();
         public void setBlocks(List<Block> blocks) => this.blocks = blocks;
         public void generateCommands()
         {
-            foreach(Block block in blocks)
-            {
-               printBlock(block);
-
+          //  tasks.Clear();
+            //visitor minta
+          //  foreach(Block block in blocks)
+           // {
+               //printBlock(block);
                //Input parsing
-               if (block.Type == "logic_compare")
+              /* if (block.Type == "logic_compare")
                {
                     LogicCompareBlock logicBlock = Block.convert<LogicCompareBlock>(block);
                     int threshHold = logicBlock.getThreshHoldValue();
@@ -27,10 +26,12 @@ namespace Senzor.Components.Blockly
                         tasks.Add(new NodeTask(
                             inputBlock.getNodeID(),
                             inputBlock.getInputChannel(),
-                            threshHold));
+                            threshHold,
+                            logicBlock.getOperator()
+                            ));
                     }
-               }
-            }
+               }*/
+            //}
         }
         private void printBlock(Block block)
         {
@@ -39,19 +40,9 @@ namespace Senzor.Components.Blockly
         }
         public void showCommands()
         {
-            foreach(var task in tasks)
-            {
-                Console.WriteLine(task.getString());
-            }
+          /*  foreach(var task in tasks)
+                Console.WriteLine(task.getString());*/
+            
         }
-        private Block getBlockById(String id)
-        {
-            foreach(var block in blocks)
-            {
-                if (block.Id == id) return block;
-            }
-            return null;
-        }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime jsRunTime
+﻿@using AutoMapper
+@inject IJSRuntime jsRunTime
 @inject HttpClient httpClient
 
 <button class="btn btn-primary" onclick="@Generate">Generate</button>
@@ -15,12 +16,12 @@
     }
 </xml>
 
-
+;
 @functions{
     private List<Block> blocks = new List<Block>();
     private List<Block> workspace = new List<Block>();
     private bool blocklyLoaded = false;
-    private CommandCreator commandCreator = new CommandCreator();
+    //private CommandCreator commandCreator = new CommandCreator();
 
     private int calculateFullHeight()
     {
@@ -29,7 +30,25 @@
 
     protected override void OnInit()
     {
+        this.initMapper();
         this.addWorkspaceBlocks();
+    }
+
+
+    private void initMapper()
+    {
+        try
+        {
+            AutoMapper.Mapper.Configuration.AssertConfigurationIsValid();
+        }
+        catch
+        {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Block, LogicCompareBlock>();
+                cfg.CreateMap<Block, NodeInputBlock>();
+            });
+        }
     }
 
     protected async override Task OnAfterRenderAsync()
@@ -38,7 +57,7 @@
         {
             await this.initWorkspace();
             //init Blockly
-            blocklyLoaded = await jsRunTime.InvokeAsync<bool>("initBlockly");
+            blocklyLoaded = await jsRunTime.InvokeAsync<bool>("blocklyInterop.initBlockly");
         }
     }
 
@@ -59,21 +78,21 @@
 
     private async Task initWorkspace()
     {
-        foreach(var block in workspace)
+        foreach (var block in workspace)
         {
-            if(block is CustomBlock)
+            if (block is CustomBlock)
             {
                 CustomBlock customBlock = (CustomBlock)block;
-                await customBlock.Init(jsRunTime,httpClient);
+                await customBlock.Init(jsRunTime, httpClient);
             }
         }
     }
 
     private async Task updateBlocks()
     {
-        string blockString = await jsRunTime.InvokeAsync<String>("getState");
+        string blockString = await jsRunTime.InvokeAsync<String>("blocklyInterop.getState");
         blocks = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Block>>(blockString);
-        foreach(var block in blocks)
+        foreach (var block in blocks)
         {
             setChildrenBlocks(block);
         }
@@ -82,10 +101,10 @@
     private void setChildrenBlocks(Block block)
     {
         List<Block> childrenBlocks = new List<Block>();
-        foreach(String childID in block.ChildrenIds)
+        foreach (String childID in block.ChildrenIds)
         {
             Block childBlock = getBlockById(childID);
-            if (childBlock != null) childrenBlocks.Add(childBlock);
+            if (childBlock != null) { childrenBlocks.Add(childBlock); }
         }
         block.Children = childrenBlocks;
     }
@@ -94,18 +113,19 @@
     {
         foreach (var block in blocks)
         {
-            if (block.Id == Id) return block;
+            if (block.Id == Id) { return block; }
         }
         return null;
+
     }
 
     public async Task Generate()
     {
 
         await updateBlocks();
-        commandCreator.setBlocks(blocks);
+        /*commandCreator.setBlocks(blocks);
         commandCreator.generateCommands();
-        commandCreator.showCommands();
+        commandCreator.showCommands();*/
 
     }
 }

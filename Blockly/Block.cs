@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Senzor.Components.Blockly
+namespace Blockly
 {
     public class Block
     {

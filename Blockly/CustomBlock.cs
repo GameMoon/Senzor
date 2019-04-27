@@ -1,11 +1,13 @@
 ﻿using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Senzor.Components.Blockly
+namespace Blockly
 {
     public class CustomBlock : Block
     {
@@ -13,9 +15,11 @@ namespace Senzor.Components.Blockly
 
         public async Task Init(IJSRuntime jsRunTime, HttpClient httpClient)
         {
-            String jsonString = await httpClient.GetStringAsync("/js/blockly_custom_blocks/" + Type + ".json");
+            String path = "blazor:file:" + Type + ".json";
+            String jsonString = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(path)).ReadToEnd();
+           
             await jsRunTime.InvokeAsync<bool>(
-                "loadBlock",
+                "blocklyInterop.loadBlock",
                 Type,
                 jsonString
             );
