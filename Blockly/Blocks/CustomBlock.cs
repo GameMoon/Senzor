@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Blockly
+namespace Blockly.Blocks
 {
-    public class CustomBlock : Block
+    public abstract class CustomBlock : Block
     {
         public CustomBlock(string type) : base(type) { }
 
@@ -23,6 +23,10 @@ namespace Blockly
                 Type,
                 jsonString
             );
+        }
+        public override void Accept(IBlockVisitor visitor)
+        {
+            visitor.Visit(this);
         }
 
     }

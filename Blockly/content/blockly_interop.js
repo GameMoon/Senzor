@@ -18,14 +18,22 @@ var onresize = function (e) {
 	blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
 	Blockly.svgResize(window.workspace);
 };
-window.blocklyInterop = {
-	loadBlockly: function(){
-		global.Blockly = require('./blockly_compresed.js');
-	},
+function blockModificationHandler(event) {
+	if (
+		event.type == Blockly.Events.BLOCK_CHANGE ||
+		event.type == Blockly.Events.BLOCK_CREATE ||
+		event.type == Blockly.Events.BLOCK_DELETE ||
+		event.type == Blockly.Events.BLOCK_MOVE
+	) {
+		window.workSpaceInstance.invokeMethodAsync("UpdateBlocks");
+	}
+}
 
-	loadJS: function (content) {
-		document.getElementsByTagName("head")[0].innerHTML += ("<script>" + content + "</script>");
-		return true;
+window.blocklyInterop = {
+
+	passWorkspaceInstance: function (instance) {
+		console.log(instance);
+		window.workSpaceInstance = instance;
 	},
 
 	initBlockly: function () {
@@ -35,10 +43,11 @@ window.blocklyInterop = {
 			{ toolbox: document.getElementById('toolbox') });
 
 		window.workspace = workspace;
-
+		
 		window.addEventListener('resize', window.onresize, false);
 		onresize();
 		Blockly.svgResize(workspace);
+		workspace.addChangeListener(blockModificationHandler);
 		return true;
 	},
 
@@ -72,16 +81,24 @@ window.blocklyInterop = {
 			else newBlock['parentid'] = "";
 
 			//Children
-			var childrenBlocks = block.getChildren();
-			if (childrenBlocks.length > 0) {
-				var children = [];
-				childrenBlocks.forEach(function (childBlock) {
-					children.push(childBlock.id);
+			
+			var inputList = block.inputList;
+			if (inputList.length > 0) {
+				var inputs = [];
+
+				inputList.forEach(function (input, index) {
+					
+					if (input.connection && input.connection.targetConnection) {
+						inputs[index] = input.connection.targetConnection.getSourceBlock().id;
+					}
+					else inputs[index] = null;
 				});
 
-				newBlock["childrenids"] = children;
+			
+				newBlock["InputIds"] = inputs;
 			}
-			else newBlock['childrenids'] = []
+			else newBlock['InputIds'] = []
+
 
 			blocks.push(newBlock);
 		});

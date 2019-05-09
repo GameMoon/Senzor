@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senzor", "Senzor\Senzor.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blockly", "Blockly\Blockly.csproj", "{6476DDF7-F010-4643-AA67-4292F8B7975C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{E46D793E-ED8F-4DED-9F41-D96D672D32E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6476DDF7-F010-4643-AA67-4292F8B7975C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6476DDF7-F010-4643-AA67-4292F8B7975C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6476DDF7-F010-4643-AA67-4292F8B7975C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E46D793E-ED8F-4DED-9F41-D96D672D32E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E46D793E-ED8F-4DED-9F41-D96D672D32E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E46D793E-ED8F-4DED-9F41-D96D672D32E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E46D793E-ED8F-4DED-9F41-D96D672D32E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

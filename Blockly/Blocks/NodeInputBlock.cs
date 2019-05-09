@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Blockly
+namespace Blockly.Blocks
 {
-    public class NodeInputBlock : Block
+    public class NodeInputBlock : CustomBlock
     {
         public NodeInputBlock() : base("node_input")
         {
@@ -13,19 +13,25 @@ namespace Blockly
         }
         public String getNodeID()
         {
-            foreach(var block in children)
+            foreach(var block in inputs)
             {
-                if (block.Type == "sensor") return block.Value;
+                if (block.Type == "node") return block.Value;
             }
             return null;
         }
         public int getInputChannel()
         {
-            foreach(var block in children)
+            foreach(var block in inputs)
             {
                 if (block.Type == "sensor") return Int32.Parse(block.Value);
             }
             return -1;
         }
+
+        public ConditionInput getInput()
+        {
+            return new ConditionInput(getNodeID(), getInputChannel());
+        }
+
     }
 }

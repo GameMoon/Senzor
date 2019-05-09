@@ -1,7 +1,36 @@
 ﻿@page "/editor"
 @using Blockly
+@using Blockly.Blocks
 
 <h1>Editor</h1>
-Blockly
 
-<Workspace></Workspace>
+<button class="btn btn-primary" onclick="@Generate">Generate</button>
+
+<Workspace ref="workSpace" ></Workspace>
+
+@functions{
+
+    private List<Block> blocks = new List<Block>();
+
+    Workspace workSpace = new Workspace();
+
+    protected override void OnAfterRender()
+    {
+        workSpace.BlocksChanged += updateBlocks;
+    }
+
+    public void updateBlocks(List<Block> blocks)
+    {
+        this.blocks = blocks;
+    }
+
+    public async Task Generate()
+    {
+        Blocks blockHandler = new Blocks(blocks);
+
+        RuleVisitor ruleVisitor = new RuleVisitor();
+
+        blockHandler.Accept(ruleVisitor);
+        ruleVisitor.showRules();
+    }
+}
