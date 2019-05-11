@@ -9,6 +9,9 @@ namespace Backend
     public interface INodeManager
     {
        void AddNode(Node node);
+       Node GetNode(string id);
+       void SendMessage(NodeMessage nodeMessage);
        List<Node> GetAll();
+     
     }
 }

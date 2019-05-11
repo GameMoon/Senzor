@@ -17,7 +17,7 @@ namespace Backend
 
         public UDPSocket()
         {
-            udpClient.Connect(IPAddress.Parse("192.168.0.255"), 1360);
+            udpClient.Connect(IPAddress.Parse("192.168.173.255"), 1360);
 
             listenerTask = new Task(() => Listen());
             listenerTask.Start();
@@ -31,12 +31,12 @@ namespace Backend
             while (true)
             {
                     byte[] receiveBytes = recvClient.Receive(ref endPoint);
+                    if (endPoint.Address.ToString() == "192.168.173.1") continue;
                     lock (messageLock)
                     {
                         messages.Add(receiveBytes);
                     }
-                    string receiveString = Encoding.ASCII.GetString(receiveBytes);
-                    System.Diagnostics.Debug.WriteLine(receiveString);
+                 
             }
         }
         public void Send(string message)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Backend.Controllers
 {
@@ -21,37 +22,20 @@ namespace Backend.Controllers
 
         // GET api/node
         [HttpGet]
-        public ActionResult<int> Get()
+        public ActionResult Get()
         {
-            //return new string[] { "value1", "value2" };
-            _udpSocket.Send("test");
-            return _nodeManager.GetAll().Count;
+            return Ok(JsonConvert.SerializeObject(_nodeManager.GetAll()));
         }
 
        
-        // GET api/node/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        // GET api/node/write/nodeid/pin/state
+        [HttpGet("write/{nodeid}/{pin}/{state}")]
+        public ActionResult Get(string nodeid,int pin,int state)
         {
-            return "value";
+            _nodeManager.SendMessage(WriteMessage.SetPin(nodeid, pin, state));
+            return Ok("message sent");
         }
 
-        // POST api/node
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/node/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/node/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
