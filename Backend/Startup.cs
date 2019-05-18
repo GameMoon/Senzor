@@ -25,10 +25,22 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:50803")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+                });
+            });
+
             services.AddControllers()
                 .AddNewtonsoftJson();
             services.AddSingleton<INodeManager, NodeManager>();
             services.AddSingleton<IUDPSocket, UDPSocket>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,8 +56,9 @@ namespace Backend
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseRouting();
 
             app.UseAuthorization();

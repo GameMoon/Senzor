@@ -7,9 +7,14 @@ namespace Blockly.Blocks
 {
     public class NodeBlock : CustomBlock
     {
-        public NodeBlock() : base("node")
-        {
 
+        public NodeBlock(List<string[]> nodes) : base("node")
+        {
+            if (nodes == null) return;
+            foreach(var node in nodes)
+            {
+                _options.Add(node);
+            }
         }
     }
 }

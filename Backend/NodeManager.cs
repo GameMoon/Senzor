@@ -1,4 +1,5 @@
-﻿using Senzor.Components;
+﻿using Blockly;
+using Senzor.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,10 +11,14 @@ namespace Backend
     {
         private readonly IUDPSocket _udpSocket;
         private List<Node> nodes = new List<Node>();
+        private List<Rule> rules = new List<Rule>();
+        private RuleManager _ruleManager;
+
         Timer pollingTimer;
 
         public NodeManager(IUDPSocket udpSocket)
         {
+            _ruleManager = new RuleManager(this);
             _udpSocket = udpSocket;
             pollingTimer = new Timer(1000);
             pollingTimer.Elapsed += Update;
@@ -25,6 +30,14 @@ namespace Backend
             int index = nodes.FindIndex(f => f.Id == node.Id);
             if(index < 0) this.nodes.Add(node);
         } 
+        public void AddRule(Rule rule)
+        {
+            rules.Add(rule);
+        }
+        public void DeleteRule(int index)
+        {
+            rules.RemoveAt(index);
+        }
         public Node GetNode(string nodeid)
         {
             int index = nodes.FindIndex(f => f.Id == nodeid);
@@ -36,6 +49,11 @@ namespace Backend
         {
             return nodes;
         }
+        public List<Rule> GetAllRules()
+        {
+            return rules;
+        }
+
         public void SendMessage(NodeMessage msg)
         {
             _udpSocket.Send(msg.CreateString());
@@ -60,11 +78,24 @@ namespace Backend
             
         }
         
+        private void ProcessRules()
+        {
+            foreach(var rule in rules)
+            {
+                try
+                {
+                    _ruleManager.check(rule);
+                }
+                catch (NullReferenceException e) { System.Diagnostics.Debug.WriteLine("Node not found"); }
+            }   
+        }
+      
 
         public void Update(Object source, ElapsedEventArgs e)
         {
             ParseMessage();
             Mainteance();
+            ProcessRules();
             //_udpSocket.Send("hello there");
             //System.Diagnostics.Debug.WriteLine("test");
         }

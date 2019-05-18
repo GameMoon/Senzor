@@ -26,6 +26,9 @@
 
     private List<Block> blocks = new List<Block>();
 
+    [Parameter]
+    public List<Block> WorkspaceBlocks { get { return workspace; } set { workspace = value; } }
+
     private List<Block> workspace = new List<Block>();
     private bool blocklyLoaded = false;
 
@@ -39,7 +42,6 @@
     {
         this.initMapper();
         jsRunTime.InvokeAsync<object>("blocklyInterop.passWorkspaceInstance", new DotNetObjectRef(this));
-        if (workspace.Count == 0) { this.addWorkspaceBlocks(); }
     }
 
 
@@ -69,18 +71,9 @@
         }
     }
 
-    private void addWorkspaceBlocks()
+    public void AddBlock(Block block)
     {
-        workspace.Add(new LogicCompareBlock());
-        workspace.Add(new LogicBooleanBlock());
-        workspace.Add(new LogicOperationBlock());
-        workspace.Add(new ControlsIfBlock());
-        workspace.Add(new MathNumberBlock());
-        workspace.Add(new NodeBlock());
-        workspace.Add(new NodeInputBlock());
-        workspace.Add(new SensorBlock());
-        workspace.Add(new NodeOutputBlock());
-        workspace.Add(new OutputSelectorBlock());
+        workspace.Add(block);
     }
 
     private async Task initWorkspace()
@@ -112,10 +105,10 @@
             blocks.Add(BlockParser.parse(jBlock));
         }
 
-        foreach(var newBlock in blocks) { 
-        setChildrenBlocks(newBlock);
-            }
-        
+        foreach(var newBlock in blocks) {
+            setChildrenBlocks(newBlock);
+        }
+
         BlocksChanged?.Invoke(blocks);
     }
 

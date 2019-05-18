@@ -15,7 +15,10 @@ namespace Blockly
         {
             rules.Add(b.getRule());
         }
-
+        public List<Rule> getRules()
+        {
+            return rules;
+        }
         public void showRules()
         {
             foreach (Rule rule in rules)

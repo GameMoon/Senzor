@@ -1,18 +1,53 @@
 ﻿@page "/editor"
 @using Blockly
 @using Blockly.Blocks
+@using System.Text;
+@using Newtonsoft.Json;
+
+@inject HttpClient httpClient
+@inject INodeManager nodeManager
 
 <h1>Editor</h1>
 
 <button class="btn btn-primary" onclick="@Generate">Generate</button>
 
-<Workspace ref="workSpace" ></Workspace>
+<Workspace ref="workSpace" WorkspaceBlocks=@workspaceBlocks></Workspace>
 
 @functions{
 
     private List<Block> blocks = new List<Block>();
+    private List<Block> workspaceBlocks = new List<Block>();
 
-    Workspace workSpace = new Workspace();
+    Workspace workSpace;
+
+    protected override void OnInit()
+    {
+        workSpace = new Workspace();
+        initWorkSpaceBlocks();
+    }
+    private List<string[]> getNodeNames()
+    {
+        List<string[]> names = new List<string[]>();
+        foreach (var node in nodeManager.GetAll())
+        {
+            names.Add(new string[] { node.Id, node.Id });
+        }
+        return names;
+    }
+
+    private void initWorkSpaceBlocks()
+    {
+        workspaceBlocks.Add(new LogicCompareBlock());
+        workspaceBlocks.Add(new LogicBooleanBlock());
+        //workspaceBlocks.Add(new LogicOperationBlock());
+        workspaceBlocks.Add(new ControlsIfBlock());
+        workspaceBlocks.Add(new MathNumberBlock());
+        workspaceBlocks.Add(new NodeBlock(getNodeNames()));
+        workspaceBlocks.Add(new NodeInputBlock());
+        workspaceBlocks.Add(new SensorBlock());
+        workspaceBlocks.Add(new NodeOutputBlock());
+        workspaceBlocks.Add(new OutputSelectorBlock());
+    }
 
     protected override void OnAfterRender()
     {
@@ -29,8 +64,16 @@
         Blocks blockHandler = new Blocks(blocks);
 
         RuleVisitor ruleVisitor = new RuleVisitor();
-
         blockHandler.Accept(ruleVisitor);
+
         ruleVisitor.showRules();
+        sendRules(ruleVisitor.getRules());
+    }
+    public void sendRules(List<Rule> rules)
+    {
+        foreach (Rule rule in rules)
+        {
+            httpClient.PostJsonAsync("http://localhost:5000/api/rule",rule);
+        }
     }
 }

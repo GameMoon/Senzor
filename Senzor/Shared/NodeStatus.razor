@@ -1,0 +1,60 @@
+﻿@using Senzor.Components
+@inject INodeManager nodeManager;
+
+<h3>Connected devices</h3>
+<table class="table table-striped">
+    <thead class="thead">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Input</th>
+            <th scope="col">Output</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var node in connectedNodes)
+        {
+        <tr>
+            <td>@node.Id</td>
+            <td>
+                @foreach (int input in node.GetInputAll())
+                {
+                    @if (input == 1)
+                    {<span class="badge badge-success">High</span> }
+                    else
+                    { <span class="badge badge-danger">Low</span>}
+                }
+            </td>
+            <td>
+                @foreach (int input in node.GetOutputAll())
+                {
+                    @if (input == 1)
+                    {<span class="badge badge-success">High</span> }
+                    else
+                    { <span class="badge badge-danger">Low</span>}
+                }
+            </td>
+        </tr>
+        }
+
+
+    </tbody>
+</table>
+
+
+@functions{
+    List<Node> connectedNodes;
+
+    protected override void OnInit()
+    {
+        update();
+        nodeManager.AddUpdateFunction(update);
+    }
+
+    private void update()
+    {
+
+        connectedNodes = nodeManager.GetAll();
+        this.StateHasChanged();
+    }
+
+}

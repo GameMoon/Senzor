@@ -14,12 +14,18 @@ namespace Backend
 
         public override void Process(INodeManager nodeManager)
         {
-            Node newNode = new Node(NodeID);
+            Node newNode = nodeManager.GetNode(NodeID);//new Node(NodeID);
+            if (newNode == null)
+            {
+                newNode = new Node(NodeID);
+                nodeManager.AddNode(newNode);
+            }
+
             for (int index = 0; index < Payload.Length; index++)
             {
                 newNode.SetInput(index, Payload[index]);
             }
-            nodeManager.AddNode(newNode);
+            
         }
     }
 }

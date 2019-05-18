@@ -10,6 +10,8 @@ namespace Blockly
         public String NodeID { get; set; }
         public int Channel { get; set; }
         public int Value { get; set; }
+
+        public ConditionInput() { }
         public ConditionInput(int value)
         {
             Value = value;
@@ -20,5 +22,6 @@ namespace Blockly
             NodeID = nodeID;
             Channel = channel;
         }
+
     }
 }

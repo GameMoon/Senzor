@@ -8,19 +8,19 @@
       "options": [
         [
           "Temperature",
-          "1"
+          "0"
         ],
         [
           "Motion",
-          "2"
+          "1"
         ],
         [
           "Light",
-          "3"
+          "2"
         ],
         [
           "Sound",
-          "4"
+          "3"
         ]
       ]
     }

@@ -18,6 +18,9 @@ namespace Senzor.Components
 
         public void SetOutput(int index, int value) { output[index] = value; }
         public int GetOutput(int index) { return output[index];}
+
+        public int[] GetInputAll() { return input; }
+        public int[] GetOutputAll() { return output; }
        
     }
 }
